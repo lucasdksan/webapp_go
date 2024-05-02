@@ -1,20 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Devbook</title>
 </head>
-<body>
-    <h2>Home</h2>
 
-    {{ range . }}
-        <span>{{ .Title }}</span>
-        <span>{{ .Title }}</span>
-        <span>{{ .Content }}</span>
-        <span>{{ .AuthorID }}</span>
-        <span>{{ .AuthorNick }}</span>
-        <strong>{{ .Likes }}</strong>
-    {{ end }}
+<body>
+    {{ template "header" }}
+
+    <div class="container-fluid">
+        <div class="row mt-4">
+            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
+                <h3>Nova Publicação</h3>
+                <fieldset>
+                    <form id="new-post" action="">
+                        <div class="form-group mb-3">
+                            <label class="form-label" for="title">Título</label>
+                            <input type="text" class="form-control" id="title" name="title" required
+                                placeholder="Insira o título da sua publicação" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label" for="content">Contéudo</label>
+                            <textarea class="form-control" id="content" name="content" required
+                                placeholder="Insira o contéudo da sua publicação"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Publicar</button>
+                    </form>
+                </fieldset>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xl-7">
+                {{ range .Publications }}
+
+                <div class="card mb-5">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ .Title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                        <p class="card-text">{{ .Content }}</p>
+                        <a href="#" class="card-link">{{ .AuthorNick }} - {{ .CreateAt }}</a>
+                        
+                        {{ if(eq .AuthorID $.UserID) }}
+                            <button>Fui</button>
+                        {{ else }}
+                            <button>Like</button>
+                        {{ end }}
+
+
+                    </div>
+                </div>
+
+                {{ end }}
+            </div>
+        </div>
+    </div>
+
+    {{ template "footer" }}
 </body>
+
+{{ template "scripts" }}
+
+<script src="/assets/js/create_post.js"></script>
+
 </html>
