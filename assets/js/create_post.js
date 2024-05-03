@@ -1,4 +1,19 @@
 $("#new-post").on("submit", create_post);
+$(".like-post-btn").on("click", like_post);
+
+function like_post(event){
+    const event_click = $(event.target);
+    const publication_id = $(event_click).closest("div.post-card").data("publication-id");
+
+    $.ajax({
+        url: `/publications/${publication_id}/like`,
+        method: "POST"
+    }).done(()=>{
+        alert("Curtida")
+    }).fail((err)=>{
+        console.error("Erro na curtida: ", err)
+    });
+}
 
 function create_post(e){
     e.preventDefault();
