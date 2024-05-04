@@ -54,7 +54,35 @@ func Like_Publication(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/publications/%d/like", config.ApiURL, publication_id)
+	url := fmt.Sprintf("%s/publication/%d/like", config.ApiURL, publication_id)
+
+	response, err := requests.Make_request_with_authentication(r, http.MethodPost, url, nil)
+
+	if err != nil {
+		responses.JSON(w, http.StatusInternalServerError, responses.ErroAPI{Erro: err.Error()})
+		return
+	}
+
+	defer response.Body.Close()
+
+	if response.StatusCode >= 400 {
+		responses.Treat_Error_Status_Code(w, response)
+		return
+	}
+
+	responses.JSON(w, response.StatusCode, nil)
+}
+
+func Dislike_Publication(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	publication_id, err := strconv.ParseUint(params["id"], 10, 64)
+
+	if err != nil {
+		responses.JSON(w, http.StatusBadRequest, responses.ErroAPI{Erro: err.Error()})
+		return
+	}
+
+	url := fmt.Sprintf("%s/publication/%d/dislike", config.ApiURL, publication_id)
 
 	response, err := requests.Make_request_with_authentication(r, http.MethodPost, url, nil)
 

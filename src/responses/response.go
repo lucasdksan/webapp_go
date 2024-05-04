@@ -11,10 +11,11 @@ type ErroAPI struct {
 }
 
 func JSON(w http.ResponseWriter, status_code int, data interface{}) {
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status_code)
 
 	if data != nil {
+		w.Header().Set("Content-Type", "application/json")
+
 		if err := json.NewEncoder(w).Encode(data); err != nil {
 			log.Fatal(err)
 		}
