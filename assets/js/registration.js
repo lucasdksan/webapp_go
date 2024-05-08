@@ -9,7 +9,12 @@ function create_user(e){
     const nick = $("#nick").val();
 
     if(pass !== check_pass) {
-        alert("As senhas são diferentes!");
+        Swal.fire({
+            title: "Ooops...",
+            text: "As senhas são diferentes!",
+            icon: "error"
+        });
+
         return;
     }
 
@@ -23,9 +28,28 @@ function create_user(e){
             password: pass
         }
     }).done(()=>{
-        alert("Usuário cadastro com sucesso!");
+        Swal.fire({
+            title: "Sucesso",
+            text: "Usuário cadastro com sucesso!",
+            icon: "sucess"
+        }).then(()=>{
+            $.ajax({
+                url: "/login",
+                method: "POST",
+                data: {
+                    email,
+                    password: pass
+                }
+            }).done(()=>{
+                window.location = "/home";
+            });
+        });
     }).fail((err)=>{
         console.log("Error: ", err);
-        alert("Erro ao cadastrar o usuário!");
+        Swal.fire({
+            title: "Ooops...",
+            text: "Erro ao cadastrar o usuário!",
+            icon: "error"
+        });
     });
 }

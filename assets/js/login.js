@@ -14,8 +14,12 @@ function handle_login(e){
             password: pass
         }
     }).done(()=>{
-        window.location = "/home"
+        window.location = "/home";
     }).fail(()=>{
-        alert("Usuário ou senha inválidos!");
+        Swal.fire({
+            title: "Ooops...",
+            text: "Usuário ou senha inválidos!",
+            icon: "error"
+        });
     });
 }

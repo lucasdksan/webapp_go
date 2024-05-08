@@ -100,3 +100,68 @@ func Dislike_Publication(w http.ResponseWriter, r *http.Request) {
 
 	responses.JSON(w, response.StatusCode, nil)
 }
+
+func Update_Publication(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	params := mux.Vars(r)
+	publication_id, err := strconv.ParseUint(params["id"], 10, 64)
+
+	if err != nil {
+		responses.JSON(w, http.StatusBadRequest, responses.ErroAPI{Erro: err.Error()})
+		return
+	}
+
+	publication, err := json.Marshal(map[string]string{
+		"title":   r.FormValue("title"),
+		"content": r.FormValue("content"),
+	})
+
+	if err != nil {
+		responses.JSON(w, http.StatusBadRequest, responses.ErroAPI{Erro: err.Error()})
+		return
+	}
+
+	url := fmt.Sprintf("%s/publication/%d", config.ApiURL, publication_id)
+	response, err := requests.Make_request_with_authentication(r, http.MethodPut, url, bytes.NewBuffer(publication))
+
+	if err != nil {
+		responses.JSON(w, http.StatusInternalServerError, responses.ErroAPI{Erro: err.Error()})
+		return
+	}
+
+	defer response.Body.Close()
+
+	if response.StatusCode >= 400 {
+		responses.Treat_Error_Status_Code(w, response)
+		return
+	}
+
+	responses.JSON(w, response.StatusCode, nil)
+}
+
+func Delete_Publication(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	publication_id, err := strconv.ParseUint(params["id"], 10, 64)
+
+	if err != nil {
+		responses.JSON(w, http.StatusBadRequest, responses.ErroAPI{Erro: err.Error()})
+		return
+	}
+
+	url := fmt.Sprintf("%s/publication/%d", config.ApiURL, publication_id)
+	response, err := requests.Make_request_with_authentication(r, http.MethodDelete, url, nil)
+
+	if err != nil {
+		responses.JSON(w, http.StatusInternalServerError, responses.ErroAPI{Erro: err.Error()})
+		return
+	}
+
+	defer response.Body.Close()
+
+	if response.StatusCode >= 400 {
+		responses.Treat_Error_Status_Code(w, response)
+		return
+	}
+
+	responses.JSON(w, response.StatusCode, nil)
+}

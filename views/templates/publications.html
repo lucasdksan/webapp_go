@@ -11,15 +11,13 @@
 {{ end }}
 
 {{ define "edit" }}
-    <a href="/edit" style="text-decoration: none;">
+    <a href="/publications/{{ .ID }}/update" style="text-decoration: none;">
         <i class="fas fa-edit"></i>
     </a>
 {{ end }}
 
 {{ define "delete" }}
-    <a href="/delete" style="text-decoration: none;">
-        <i class="fas fa-trash text-danger"></i>
-    </a>
+    <i class="fas fa-trash text-danger delete-post"></i>
 {{ end }}
 
 {{ define "publications-with-permission" }}
@@ -28,8 +26,8 @@
             {{ template "publication-header" . }}
             <div>
                 {{ template "likes" . }}
-                {{ template "edit" }}
-                {{ template "delete" }}
+                {{ template "edit" . }}
+                {{ template "delete" . }}
             </div>
         </div>
     </div>

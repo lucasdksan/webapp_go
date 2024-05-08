@@ -24,4 +24,22 @@ var Publications_route = []Routes{
 		Functionality:           controllers.Dislike_Publication,
 		Requires_authentication: true,
 	},
+	{
+		URI:                     "/publications/{id}/update",
+		Method:                  http.MethodGet,
+		Functionality:           controllers.Load_Update_Post_Screen,
+		Requires_authentication: true,
+	},
+	{
+		URI:                     "/publications/{id}",
+		Method:                  http.MethodPut,
+		Functionality:           controllers.Update_Publication,
+		Requires_authentication: true,
+	},
+	{
+		URI:                     "/publications/{id}",
+		Method:                  http.MethodDelete,
+		Functionality:           controllers.Delete_Publication,
+		Requires_authentication: true,
+	},
 }

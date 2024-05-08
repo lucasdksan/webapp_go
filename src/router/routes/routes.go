@@ -19,6 +19,7 @@ func Configured(r *mux.Router) *mux.Router {
 	routes = append(routes, User_routes...)
 	routes = append(routes, Home_page_route)
 	routes = append(routes, Publications_route...)
+	routes = append(routes, Logout_route)
 
 	for _, route := range routes {
 		if route.Requires_authentication {
