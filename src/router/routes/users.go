@@ -18,4 +18,10 @@ var User_routes = []Routes{
 		Functionality:           controllers.Create_User,
 		Requires_authentication: false,
 	},
+	{
+		URI:                     "/users-search",
+		Method:                  http.MethodGet,
+		Functionality:           controllers.Load_Search_Screen,
+		Requires_authentication: true,
+	},
 }

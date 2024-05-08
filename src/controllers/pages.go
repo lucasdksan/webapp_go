@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"webapp_go/src/config"
 	"webapp_go/src/cookies"
 	"webapp_go/src/models"
@@ -98,4 +99,32 @@ func Load_Update_Post_Screen(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.Exec_Template(w, "publication-update.html", publication)
+}
+
+func Load_Search_Screen(w http.ResponseWriter, r *http.Request) {
+	name_nick := strings.ToLower(r.URL.Query().Get("user"))
+	url := fmt.Sprintf("%s/users?user=%s", config.ApiURL, name_nick)
+
+	response, err := requests.Make_request_with_authentication(r, http.MethodGet, url, nil)
+
+	if err != nil {
+		responses.JSON(w, http.StatusInternalServerError, responses.ErroAPI{Erro: err.Error()})
+		return
+	}
+
+	defer response.Body.Close()
+
+	if response.StatusCode >= 400 {
+		responses.Treat_Error_Status_Code(w, response)
+		return
+	}
+
+	var users []models.User
+
+	if err = json.NewDecoder(response.Body).Decode(&users); err != nil {
+		responses.JSON(w, http.StatusUnprocessableEntity, responses.ErroAPI{Erro: err.Error()})
+		return
+	}
+
+	utils.Exec_Template(w, "users.html", users)
 }
