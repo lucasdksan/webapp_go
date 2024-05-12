@@ -128,3 +128,31 @@ func Load_Search_Screen(w http.ResponseWriter, r *http.Request) {
 
 	utils.Exec_Template(w, "users.html", users)
 }
+
+func Load_Profile_Screen(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	user_id, err := strconv.ParseUint(params["id"], 10, 64)
+
+	if err != nil {
+		responses.JSON(w, http.StatusBadRequest, responses.ErroAPI{Erro: err.Error()})
+		return
+	}
+
+	user, err := models.Search_User_Complete(user_id, r)
+
+	if err != nil {
+		responses.JSON(w, http.StatusInternalServerError, responses.ErroAPI{Erro: err.Error()})
+		return
+	}
+
+	cookies, _ := cookies.Read(r)
+	user_logged_id, _ := strconv.ParseUint(cookies["id"], 10, 64)
+
+	utils.Exec_Template(w, "user.html", struct {
+		User         models.User
+		UserLoggedId uint64
+	}{
+		User:         user,
+		UserLoggedId: user_logged_id,
+	})
+}
