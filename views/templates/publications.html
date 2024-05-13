@@ -1,45 +1,45 @@
 {{ define "publication-header" }}
-    <h5 class="card-title">{{ .Title }}</h5>
-    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-    <p class="card-text">{{ .Content }}</p>
-    <a href="#" class="card-link" style="text-decoration: none;">{{ .AuthorNick }} - {{ .CreateAt.Format "02/01/2006" }}</a>
+<h5 class="card-title">{{ .Title }}</h5>
+<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+<p class="card-text">{{ .Content }}</p>
+<a href="#" class="card-link" style="text-decoration: none;">{{ .AuthorNick }} - {{ .CreateAt.Format "02/01/2006" }}</a>
 {{ end }}
 
 {{ define "likes" }}
-    <i class="fas fa-heart like-post liked-post"></i>
-    <span>{{ .Likes }} </span>
+<i class="fas fa-heart like-post liked-post"></i>
+<span>{{ .Likes }} </span>
 {{ end }}
 
 {{ define "edit" }}
-    <a href="/publications/{{ .ID }}/update" style="text-decoration: none;">
-        <i class="fas fa-edit"></i>
-    </a>
+<a href="/publications/{{ .ID }}/update" style="text-decoration: none;">
+    <i class="fas fa-edit"></i>
+</a>
 {{ end }}
 
 {{ define "delete" }}
-    <i class="fas fa-trash text-danger delete-post"></i>
+<i class="fas fa-trash text-danger delete-post"></i>
 {{ end }}
 
 {{ define "publications-with-permission" }}
-    <div class="card mb-5 post-card" data-publication-id="{{.ID}}">
-        <div class="card-body">
-            {{ template "publication-header" . }}
-            <div>
-                {{ template "likes" . }}
-                {{ template "edit" . }}
-                {{ template "delete" . }}
-            </div>
+<div class="card mb-5 post-card" data-publication-id="{{.ID}}">
+    <div class="card-body">
+        {{ template "publication-header" . }}
+        <div>
+            {{ template "likes" . }}
+            {{ template "edit" . }}
+            {{ template "delete" . }}
         </div>
     </div>
+</div>
 {{ end }}
 
 {{ define "publications-without-permission" }}
-    <div class="card mb-5 post-card" data-publication-id="{{.ID}}">
-        <div class="card-body">
-            {{ template "publication-header" . }}
-            <div>
-                {{ template "likes" . }}
-            </div>
+<div class="card mb-5 post-card" data-publication-id="{{.ID}}">
+    <div class="card-body">
+        {{ template "publication-header" . }}
+        <div>
+            {{ template "likes" . }}
         </div>
     </div>
+</div>
 {{ end }}

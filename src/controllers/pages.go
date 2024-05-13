@@ -138,15 +138,20 @@ func Load_Profile_Screen(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	cookies, _ := cookies.Read(r)
+	user_logged_id, _ := strconv.ParseUint(cookies["id"], 10, 64)
+
+	if user_id == user_logged_id {
+		http.Redirect(w, r, "/profile", http.StatusFound)
+		return
+	}
+
 	user, err := models.Search_User_Complete(user_id, r)
 
 	if err != nil {
 		responses.JSON(w, http.StatusInternalServerError, responses.ErroAPI{Erro: err.Error()})
 		return
 	}
-
-	cookies, _ := cookies.Read(r)
-	user_logged_id, _ := strconv.ParseUint(cookies["id"], 10, 64)
 
 	utils.Exec_Template(w, "user.html", struct {
 		User         models.User
@@ -155,4 +160,38 @@ func Load_Profile_Screen(w http.ResponseWriter, r *http.Request) {
 		User:         user,
 		UserLoggedId: user_logged_id,
 	})
+}
+
+func Load_Profile_Logged_User_Screen(w http.ResponseWriter, r *http.Request) {
+	cookie, _ := cookies.Read(r)
+	user_id, _ := strconv.ParseUint(cookie["id"], 10, 64)
+	user, err := models.Search_User_Complete(user_id, r)
+
+	if err != nil {
+		responses.JSON(w, http.StatusInternalServerError, responses.ErroAPI{Erro: err.Error()})
+		return
+	}
+
+	utils.Exec_Template(w, "profile.html", user)
+}
+
+func Load_Profile_Update_Screen(w http.ResponseWriter, r *http.Request) {
+	cookie, _ := cookies.Read(r)
+	user_id, _ := strconv.ParseUint(cookie["id"], 10, 64)
+	channel := make(chan models.User)
+
+	go models.Search_Data_User(channel, user_id, r)
+
+	user := <-channel
+
+	if user.ID == 0 {
+		responses.JSON(w, http.StatusInternalServerError, responses.ErroAPI{Erro: "erro ao buscar o usuario"})
+		return
+	}
+
+	utils.Exec_Template(w, "profile-update.html", user)
+}
+
+func Load_Update_Pass_Screen(w http.ResponseWriter, r *http.Request) {
+	utils.Exec_Template(w, "update-pass.html", nil)
 }

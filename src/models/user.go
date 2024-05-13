@@ -44,27 +44,35 @@ func Search_User_Complete(user_id uint64, r *http.Request) (User, error) {
 		case user_loaded := <-channel_user:
 			if user_loaded.ID == 0 {
 				return User{}, errors.New("erro ao buscar o usuário")
-			} else {
-				user = user_loaded
 			}
+
+			user = user_loaded
+
 		case followers_loaded := <-channel_followers:
-			if followers_loaded == nil {
-				return User{}, errors.New("erro ao buscar o seguidores")
-			} else {
+			if len(followers_loaded) == 0 {
 				followers = followers_loaded
+			} else if followers_loaded == nil {
+				return User{}, errors.New("erro ao buscar o seguidores")
 			}
+
+			followers = followers_loaded
+
 		case following_loaded := <-channel_following:
-			if following_loaded == nil {
-				return User{}, errors.New("erro ao buscar o seguindos")
-			} else {
+			if len(following_loaded) == 0 {
 				following = following_loaded
+			} else if following_loaded == nil {
+				return User{}, errors.New("erro ao buscar o seguindos")
 			}
+
+			following = following_loaded
 		case publications_loaded := <-channel_publications:
-			if publications_loaded == nil {
-				return User{}, errors.New("erro ao buscar publicações")
-			} else {
+			if len(publications_loaded) == 0 {
 				publications = publications_loaded
+			} else if publications_loaded == nil {
+				return User{}, errors.New("erro ao buscar publicações")
 			}
+
+			publications = publications_loaded
 		}
 	}
 
@@ -114,7 +122,7 @@ func Search_Data_Followers(channel chan<- []User, user_id uint64, r *http.Reques
 		return
 	}
 
-	fmt.Println("followers: ", followers)
+	fmt.Println("followers: ", followers, followers == nil)
 
 	if followers == nil {
 		channel <- make([]User, 0)
@@ -140,7 +148,7 @@ func Search_Data_Publications(channel chan<- []Publication, user_id uint64, r *h
 		channel <- nil
 		return
 	}
-	fmt.Println("publications: ", publications)
+	fmt.Println("publications: ", publications, publications == nil)
 
 	if publications == nil {
 		channel <- make([]Publication, 0)
@@ -166,7 +174,7 @@ func Search_Data_Following(channel chan<- []User, user_id uint64, r *http.Reques
 		channel <- nil
 		return
 	}
-	fmt.Println("following: ", following)
+	fmt.Println("following: ", following, following == nil)
 
 	if following == nil {
 		channel <- make([]User, 0)
