@@ -122,8 +122,6 @@ func Search_Data_Followers(channel chan<- []User, user_id uint64, r *http.Reques
 		return
 	}
 
-	fmt.Println("followers: ", followers, followers == nil)
-
 	if followers == nil {
 		channel <- make([]User, 0)
 	}
@@ -148,7 +146,6 @@ func Search_Data_Publications(channel chan<- []Publication, user_id uint64, r *h
 		channel <- nil
 		return
 	}
-	fmt.Println("publications: ", publications, publications == nil)
 
 	if publications == nil {
 		channel <- make([]Publication, 0)
@@ -174,7 +171,6 @@ func Search_Data_Following(channel chan<- []User, user_id uint64, r *http.Reques
 		channel <- nil
 		return
 	}
-	fmt.Println("following: ", following, following == nil)
 
 	if following == nil {
 		channel <- make([]User, 0)
