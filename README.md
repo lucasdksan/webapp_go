@@ -17,3 +17,10 @@ Além disso, representa uma aplicação de fórum onde o usuário pode se cadast
 * Tela de Profile
 * Tela de Update do Usuário
 * Tela de Update de Senha
+
+## Referências
+
+- [Golang Doc URL](https://go.dev/doc/)
+- [Udemy](https://www.udemy.com/)
+- [Chat GPT](https://chat.openai.com/)
+- [TabNews](https://www.tabnews.com.br/) 
